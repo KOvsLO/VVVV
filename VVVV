@@ -1,0 +1,37 @@
+import os
+import requests
+import json
+
+# API endpoint for retrieving data
+api_url = "https://jsonplaceholder.typicode.com/posts"
+
+# Send a GET request to retrieve the data
+response = requests.get(api_url)
+
+# Check if the response was successful
+if response.status_code != 200:
+    print("Failed to retrieve data from API.")
+    exit()
+
+# Convert the response data to a list of dictionaries
+data = json.loads(response.text)
+
+# Path to your local git repository
+repo_path = "/path/to/your/local/repo"
+
+# Change directory to the repository
+os.chdir(repo_path)
+
+# Create a new file and write the data to it
+with open("data.json", "w") as f:
+    json.dump(data, f)
+
+# Add the file to the repository
+subprocess.call(["git", "add", "data.json"])
+
+# Commit the changes with a message
+commit_message = "Added data from API."
+subprocess.call(["git", "commit", "-m", commit_message])
+
+# Push the changes to the remote repository
+subprocess.call(["git", "push"])
